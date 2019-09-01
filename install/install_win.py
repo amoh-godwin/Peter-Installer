@@ -37,14 +37,16 @@ class WinInstall():
 
         cmd = self.destination + '/mysql/bin/mysqld --defaults-file="'+ \
         self.destination + '/mysql/my.ini' + '" --initialize-insecure'
+        out1 = check_output(cmd, shell=True)
 
 
     def install_mysql_serv(self):
         
         
-        cmd = self.destination + '/mysql/bin/mysqld --install MySQL573 --defaults-file="'+ \
+        cmd = self.destination + \
+        '/mysql/bin/mysqld --install MySQL573 --defaults-file="'+ \
         self.destination + '/mysql/my.ini' + '"'
-
+        out1 = check_output(cmd, shell=True)
 
     def set_pass(self):
 
