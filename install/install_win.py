@@ -15,7 +15,7 @@ class WinInstall():
 
     def __init__(self):
         super.__init__
-        self.destination = "H:\\\\GitHub\\\\Peter"
+        self.destination = "C:\\Deuteronomy Works\\Peter"
         main_path = os.getcwd()
         self.passcode = 'ampofo1'
         self.main = main_path.replace('\\install', '')
@@ -24,16 +24,16 @@ class WinInstall():
                           "passcode": ""},
                          [{"index": 0, "name": "Peter Web Server",
                            "path": "PeterWebServer",
-                           "port": 7773, "status": "Stopped"},
+                           "default_port": 80, "port": 7773,
+                           "status": "Stopped"},
                        {"index": 1, "name": "MySQL Database",
                         "path": "mysql\\bin\\",
                         "status": "Stopped"}]]
         self.mysqld_proc = None
-        # self.copy_files()
-        self.init_mysql()
-        self.start_mysqld()
-        self._set_pass()
-        # self.install_mysql_serv()
+        
+        #self.init_mysql()
+        #self.start_mysqld()
+        #self._set_pass()
         
         self._create_file()
 
