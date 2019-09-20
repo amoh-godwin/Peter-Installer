@@ -24,7 +24,7 @@ Component {
                     spacing: 16
 
                     Text {
-                        text: qsTr("Installing Server")
+                        text: qsTr("Installing Php")
                         font.family: "Segoe UI Semilight"
                         font.pixelSize: 14
                         color: "white"
