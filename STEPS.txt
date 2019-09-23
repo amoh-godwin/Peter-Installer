@@ -5,5 +5,4 @@ choose username and password
 installing mysql
 installing php - php.ini
 finalising with settings
-creating uninstaller
 thank you

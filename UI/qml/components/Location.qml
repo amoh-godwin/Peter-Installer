@@ -1,11 +1,16 @@
-import QtQuick 2.11
-import QtQuick.Controls 2.4
-import QtQuick.Layouts 1.4
+import QtQuick 2.10
+import QtQuick.Controls 2.3
+import QtQuick.Layouts 1.3
 
 Component {
 
     Rectangle {
-        anchors.fill: parent
+        property QtObject location
+
+        Component.onCompleted: {
+            stage = 2
+            useDefaultLocation()
+        }
 
         ColumnLayout {
             anchors.fill: parent
@@ -29,8 +34,12 @@ Component {
                             spacing: 4
 
                             TextField {
-                                text: "/path/to/Server"
+                                text: ""
                                 color: "white"
+
+                                Component.onCompleted: {
+                                    location = this
+                                }
 
                                 background: Rectangle {
                                     implicitWidth: 380
@@ -44,6 +53,11 @@ Component {
 
                             Button {
                                 text: "Browse"
+
+                                onClicked: {
+                                    folder_picker.open()
+                                }
+
                             }
 
                         }
@@ -70,14 +84,29 @@ Component {
 
                     Button {
                         text: qsTr("Use Default")
+
+                        onClicked: {
+                            useDefaultLocation();
+                        }
+
                     }
 
                     Button {
                         text: qsTr("Back")
+
+                        onClicked: {
+                            declineLocation();
+                        }
+
                     }
 
                     Button {
                         text: qsTr("Next")
+
+                        onClicked: {
+                            proceedAfterLocation();
+                        }
+
                     }
 
                 }

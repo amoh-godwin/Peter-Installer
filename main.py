@@ -5,23 +5,25 @@ Created on Sun Sep  1 16:16:42 2019
 @author: Ampofo
 """
 import sys
+import os
 from PyQt5.QtCore import QCoreApplication, QSettings, QResource
 from PyQt5.QtGui import QGuiApplication, QIcon
 from PyQt5.QtQml import QQmlApplicationEngine
 
-from install import install_win
+from connector import Connector
 
 QCoreApplication.setOrganizationName("Deuteronomy Works")
 QCoreApplication.setApplicationName("Peter")
 settings = QSettings()
 
+os.environ['QT_QUICK_CONTROLS_STYLE'] = 'Universal'
 app = QGuiApplication(sys.argv)
-app.setWindowIcon(QIcon(""))
+# app.setWindowIcon(QIcon(""))
 
-win_installer = install_win.WinInstall()
+connect = Connector()
 
 engine = QQmlApplicationEngine()
-engine.rootContext().setContextProperty()
+engine.rootContext().setContextProperty('Connector', connect)
 engine.load("UI/qml/main.qml")
 engine.quit.connect(app.quit)
 

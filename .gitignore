@@ -114,5 +114,6 @@ dmypy.json
 .pyre/
 
 # Project based
+*.qmlc
 /mysql
 /php

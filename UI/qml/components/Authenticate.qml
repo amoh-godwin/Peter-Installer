@@ -1,12 +1,17 @@
-import QtQuick 2.11
-import QtQuick.Controls 2.4
-import QtQuick.Layouts 1.4
+import QtQuick 2.10
+import QtQuick.Controls 2.3
+import QtQuick.Layouts 1.3
 import "../others" as Others
 
 Component {
 
     Rectangle {
-        anchors.fill: parent
+        id: cont
+
+        property QtObject field1
+        property QtObject field2
+
+        Component.onCompleted: stage = 4
 
         ColumnLayout {
             anchors.fill: parent
@@ -52,6 +57,9 @@ Component {
 
                             Others.PassField {
                                 Layout.alignment: Qt.AlignRight
+
+                                Component.onCompleted: cont.field1 = this
+
                             }
                         }
 
@@ -70,6 +78,8 @@ Component {
 
                             Others.PassField {
                                 Layout.alignment: Qt.AlignRight
+
+                                Component.onCompleted: cont.field2 = this
 
                             }
                         }
@@ -93,10 +103,20 @@ Component {
 
                     Button {
                         text: qsTr("Back")
+
+                        onClicked: {
+                            rejectAuthentication();
+                        }
+
                     }
 
                     Button {
                         text: qsTr("Next")
+
+                        onClicked: {
+                            proceedAfterAuth();
+                        }
+
                     }
 
                 }
