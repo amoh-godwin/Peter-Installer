@@ -13,7 +13,9 @@ Component {
         Component.onCompleted: {
             stage = 7;
             done = false;
-            finalise()
+            if(installing) {
+                startMySqlInstallation()
+            }
         }
 
         ColumnLayout {

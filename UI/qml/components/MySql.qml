@@ -9,11 +9,14 @@ Component {
 
         property int progress_percent: 4
         property bool done: true
+        property bool installing: true
 
         Component.onCompleted: {
             stage = 5;
             done = false;
-            startMySqlInstallation()
+            if(installing) {
+                startMySqlInstallation()
+            }
         }
 
         ColumnLayout {

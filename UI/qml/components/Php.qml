@@ -13,7 +13,9 @@ Component {
         Component.onCompleted: {
             stage = 6;
             done = false;
-            startPhpInstallation()
+            if(installing) {
+                startPhpInstallation()
+            }
         }
 
         ColumnLayout {
