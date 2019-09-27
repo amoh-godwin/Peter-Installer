@@ -10,12 +10,11 @@ Component {
         property int progress_percent: 4
         property bool done: true
 
+
         Component.onCompleted: {
             stage = 6;
             done = false;
-            if(installing) {
-                startPhpInstallation()
-            }
+            startPhpInstallation()
         }
 
         ColumnLayout {

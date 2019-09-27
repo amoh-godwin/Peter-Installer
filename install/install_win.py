@@ -1,24 +1,35 @@
 # Thank you Heavenly Father
 
 import subprocess
+from urllib.request import urlopen
 import threading
 from time import sleep
 import os
 import base64
 
-class WinInstall():
+class Install():
 
 
     """
     """
 
 
-    def __init__(self):
+    def __init__(self, destination):
         super.__init__
-        self.destination = "C:\\Deuteronomy Works\\Peter"
+        self.destination = destination
+        self.path = ['', '', '', 'bin', '', 'bin/mysql', 'bin/php']
+        self.server_path = os.path.join(self.destination, 'bin')
+        self.php_path = os.path.join(self.server_path, 'php')
+        self.mysql_path = os.path.join(self.server_path, 'mysql')
+        self.folder_size = [0, 0, 0, 54, 0, 9, 90, 0]
+        self.curr_folder_size = [0, 0, 0, 0, 0, 0, 0, 0]
+        self.curr_copying_file = ["", "", "", "", "", "", "", ""]
+        self.folder_conts = [[], [], [], [], [], [], [], []]
         main_path = os.getcwd()
-        self.passcode = 'ampofo1'
+        self.passcode = ''
         self.main = main_path.replace('\\install', '')
+        self.server_port = 0
+        self.mysql_port = 3336
         self.settings = [{'parent_folder': "",
                           "settings_file": "3ddb429e2f446edae3406bb9d0799eed7bddda600d9a05fe01d3baaa.settings",
                           "passcode": ""},
@@ -30,25 +41,107 @@ class WinInstall():
                         "path": "mysql\\bin\\",
                         "status": "Stopped"}]]
         self.mysqld_proc = None
-        
+        self.copy_server_proc = None
+        self.copy_myqld_proc = None
+        self.copy_php_proc = None
+
         #self.init_mysql()
         #self.start_mysqld()
-        #self._set_pass()
-        
-        self._create_file()
+        #self.set_pass()
 
+        # self._create_file()
 
-    def copy_files(self):
+    def copy_server_files(self):
 
-        cmd1 = 'xcopy ' + self.main + '\\php' + ' ' + self.destination + '\\php\\'
-        cmd2 = 'xcopy ' + self.main + '\\mysql' + ' ' + self.destination + '\\mysql\\'
-        
-        print(cmd1, cmd2)
+        #cmd1 = 'xcopy ' + self.main + '\\base_files "' + self.server_destination + '"'
 
-        out1 = check_output(cmd1 + ' /E /Y', shell=True)
-        out2 = check_output(cmd2 + ' /E /Y', shell=True)
+        cmd = 'xcopy ' + self.main + '\\base "' + self.forward_slash(self.server_path) + '" /E /Y'
 
-    def _create_file(self):
+        self.copy_server_proc = subprocess.Popen(cmd,
+                        stdout=subprocess.PIPE,
+                        stderr=subprocess.STDOUT,
+                        shell=True)
+
+        return self.copy_server_proc
+
+    def write_ports(self):
+        try:
+            req = urlopen("http://localhost:80")
+            self.server_port = 7773
+            self.mysql_port = 3336
+        except:
+            self.server_port = 80
+            self.mysql_port = 3306
+
+    def write_php_ini_file(self):
+
+        ini_path = os.path.join(self.php_path, 'php.ini')
+        with open(ini_path, encoding='utf-8') as ini_file:
+            contents = ini_file.read()
+
+        # Port change
+        contents = contents.replace("mysqli.default_port = 3306",
+                                    "mysqli.default_port = "+str(self.mysql_port))
+        # Dir change
+        contents = contents.replace("C:/Test", 
+                                    self.forward_slash(self.php_path))
+
+        # Save
+        with open(ini_path, mode='w', encoding='utf-8') as o_ini_file:
+            o_ini_file.write(contents)
+
+    def copy_php_files(self):
+
+        # call watcher
+        self.watcher('php')
+
+        # Create the folder
+        os.makedirs(self.php_path)
+        cmd = 'xcopy ' + self.main + '\\php "' + self.forward_slash(self.php_path) + '" /E /Y'
+
+        self.copy_php_proc = subprocess.Popen(cmd,
+                        stdout=subprocess.PIPE,
+                        stderr=subprocess.STDOUT,
+                        shell=True)
+        return self.copy_php_proc
+
+    def copy_mysql_files(self):
+
+        # Create the folder
+        os.makedirs(self.mysql_path)
+        cmd = 'xcopy ' + self.main + '\\mysql "' + self.forward_slash(self.mysql_path) + '" /E /Y'
+
+        print(cmd)
+        self.copy_mysqld_proc = subprocess.Popen(cmd,
+                        stdout=subprocess.PIPE,
+                        stderr=subprocess.STDOUT,
+                        shell=False)
+        print(self.copy_mysqld_proc.communicate())
+
+        return self.copy_mysqld_proc
+
+    def watcher(self, kind):
+        watch_thread = threading.Thread(target=self._watcher, args=[kind])
+        watch_thread.daemon = True
+        watch_thread.start()
+
+    def _watcher(self, kind):
+        no = 0
+        if kind == 'php':
+            while True:
+                no += 1
+                sleep(0.1)
+                if self.copy_php_proc:
+                    out = self.copy_php_proc.stdout.readline()
+                    conts = out
+                    self.curr_copying_file = str(conts)
+                    self.curr_folder_size[6] += 1
+                    self.folder_conts[6].append(conts)
+                    if self.curr_folder_size[6] > 89:
+                        break
+            print('len:', self.curr_folder_size[6], '\n')
+
+    def _create_sets_file(self):
  
         self.settings[0]['parent_folder'] = self.destination
         self.settings[0]['passcode'] = self.passcode
@@ -63,16 +156,41 @@ class WinInstall():
     def _encrypt(self, data):
         return base64.b64encode(bytes(str(data), 'ascii'))
 
+    def write_my_ini_file(self):
+
+        ini_path = os.path.join(self.mysql_path, 'my.ini')
+        with open(ini_path, encoding='utf-8') as ini_file:
+            contents = ini_file.read()
+
+        # Port change
+        contents = contents.replace("port=3306", "port="+str(self.mysql_port))
+        # Dir change
+        contents = contents.replace("basedir=C:/Test/mysql", 
+                                    'basedir="'+ \
+                                    self.forward_slash(self.mysql_path) + '"')
+        contents = contents.replace("datadir=C:/Test/mysql/data", 
+                                    'datadir="' + \
+                                    self.forward_slash(self.mysql_path) + \
+                                    '/data"')
+        contents = contents.replace("C:/Test",
+                                    self.forward_slash(self.server_path))
+
+        # Save
+        with open(ini_path, mode='w', encoding='utf-8') as o_ini_file:
+            o_ini_file.write(contents)
+
     def init_mysql(self):
 
-        out1 = subprocess.Popen(["H:\\GitHub\\Peter\\mysql\\bin\\mysqld.exe",
-                                 "--console",
-                                 "--initialize-insecure",
-                                 "--explicit_defaults_for_timestamp",],
-                                stdout=subprocess.PIPE,
-                                stderr=subprocess.STDOUT,
-                                shell=True)
-        out1.wait()
+        os.makedirs(os.path.join(self.mysql_path, 'data'))
+        
+        out1 = subprocess.Popen(
+                [os.path.join(self.mysql_path, 'bin/mysqld'), 
+                 "--console",
+                 "--initialize-insecure",
+                 "--explicit_defaults_for_timestamp"],
+                 stdout=subprocess.PIPE,
+                 stderr=subprocess.STDOUT,
+                 shell=True)
         print(str(out1.stdout.read(), 'utf-8'))
 
     def install_mysql_serv(self):
@@ -87,27 +205,27 @@ class WinInstall():
         mysqld_thread = threading.Thread(target=self._start_mysqld)
         mysqld_thread.daemon = True
         mysqld_thread.start()
-        
-        sleep(3)
 
+        sleep(3)
 
     def _start_mysqld(self):
         print('preparing mysql')
-        self.mysqld_proc = subprocess.Popen(["H:\\GitHub\\Peter\\mysql\\bin\\mysqld.exe"],
-            stdout=subprocess.PIPE,
-            stderr=subprocess.STDOUT,
-            shell=False)
+        self.mysqld_proc = subprocess.Popen(
+                [os.path.join(self.mysql_path, 'bin/mysqld')],
+                stdout=subprocess.PIPE,
+                stderr=subprocess.STDOUT,
+                shell=False)
 
         print(self.mysqld_proc.stdout.read())
         print('help')
 
-    def _set_pass(self):
+    def set_pass(self):
 
         print('sleeping')
         print("yea")
 
         cmd = 'ALTER USER "root"@"localhost" IDENTIFIED BY "'+self.passcode+'"'
-        out = subprocess.Popen(['H:\\GitHub\\Peter\\mysql\\bin\\mysql.exe',
+        out = subprocess.Popen([os.path.join(self.mysql_path, 'bin\\mysql.exe'),
                                 '-u','root'],
                                stdin=subprocess.PIPE,
                                stdout=subprocess.PIPE,
@@ -115,6 +233,7 @@ class WinInstall():
                                shell=False)
         # print(str(out.stdout.read(), 'utf-8'))
         print('sick')
+        # out.wait()
         out1 = out.communicate(input=bytes(cmd, 'utf-8'))
         print('very sick')
         print(out1[0])
@@ -128,5 +247,11 @@ class WinInstall():
         self.mysqld_proc.kill()
         print(str(self.mysqld_proc.stdout.read(), 'utf-8'))
 
+    def forward_slash(self, ln):
+        if "\\\\" in ln:
+            fixed = ln.replace("\\\\", "/")
+        else:
+            fixed = ln.replace("\\", "/")
+        return fixed
 
-WinInstall()
+# Install()

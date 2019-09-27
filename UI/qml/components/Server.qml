@@ -14,9 +14,7 @@ Component {
         Component.onCompleted: {
             stage = 3;
             done = false;
-            if(installing) {
-                startServerInstallation()
-            }
+            startServerInstallation()
         }
 
         ColumnLayout {
