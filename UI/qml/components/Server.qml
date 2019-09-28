@@ -7,7 +7,7 @@ Component {
     Rectangle {
         id: cont
 
-        property int progress_percent: 4
+        property int progress_percent: 0
         property string message: ""
         property bool done: true
 
@@ -56,8 +56,10 @@ Component {
                     }
 
                     Text {
+                        width: parent.width - 12
                         topPadding: -16
                         text: cont.message
+                        elide: Text.ElideMiddle
                         font.family: "Segoe UI Semilight"
                         font.pixelSize: 12
                         color: "white"

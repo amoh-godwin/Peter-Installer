@@ -70,7 +70,6 @@ ApplicationWindow {
         if(stage == 1) {
             mainWindow.close()
         } else {
-            console.log('nothing we can do')
         }
     }
 
@@ -280,7 +279,6 @@ ApplicationWindow {
 
         onDone: {
             var level = doner
-            console.log(level)
             if(level === 3) {
                 proceedAfterServerInstallation()
             } else if(level === 5) {

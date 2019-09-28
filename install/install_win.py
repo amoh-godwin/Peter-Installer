@@ -21,7 +21,7 @@ class Install():
         self.server_path = os.path.join(self.destination, 'bin')
         self.php_path = os.path.join(self.server_path, 'php')
         self.mysql_path = os.path.join(self.server_path, 'mysql')
-        self.folder_size = [0, 0, 0, 54, 0, 9, 90, 0]
+        self.folder_size = [0, 0, 0, 55, 0, 368, 90, 6]
         self.curr_folder_size = [0, 0, 0, 0, 0, 0, 0, 0]
         self.curr_copying_file = ["", "", "", "", "", "", "", ""]
         self.folder_conts = [[], [], [], [], [], [], [], []]
@@ -44,6 +44,7 @@ class Install():
         self.copy_server_proc = None
         self.copy_myqld_proc = None
         self.copy_php_proc = None
+        self.init_mysql_proc = None
 
         #self.init_mysql()
         #self.start_mysqld()
@@ -54,6 +55,9 @@ class Install():
     def copy_server_files(self):
 
         #cmd1 = 'xcopy ' + self.main + '\\base_files "' + self.server_destination + '"'
+
+        # call watcher
+        self.watcher('server')
 
         cmd = 'xcopy ' + self.main + '\\base "' + self.forward_slash(self.server_path) + '" /E /Y'
 
@@ -107,16 +111,17 @@ class Install():
 
     def copy_mysql_files(self):
 
+        # call watcher
+        self.watcher('mysql')
+        
         # Create the folder
         os.makedirs(self.mysql_path)
         cmd = 'xcopy ' + self.main + '\\mysql "' + self.forward_slash(self.mysql_path) + '" /E /Y'
 
-        print(cmd)
         self.copy_mysqld_proc = subprocess.Popen(cmd,
                         stdout=subprocess.PIPE,
                         stderr=subprocess.STDOUT,
                         shell=False)
-        print(self.copy_mysqld_proc.communicate())
 
         return self.copy_mysqld_proc
 
@@ -127,19 +132,56 @@ class Install():
 
     def _watcher(self, kind):
         no = 0
-        if kind == 'php':
+        if kind == 'server':
+            while True:
+                no += 1
+                sleep(0.1)
+                if self.copy_server_proc:
+                    out = self.copy_server_proc.stdout.readline()
+                    conts = out
+                    self.curr_copying_file[3] = str(conts, 'utf-8')
+                    self.curr_folder_size[3] += 1
+                    self.folder_conts[3].append(conts)
+                    if self.curr_folder_size[3] > 54:
+                        break
+
+        elif kind == 'php':
             while True:
                 no += 1
                 sleep(0.1)
                 if self.copy_php_proc:
                     out = self.copy_php_proc.stdout.readline()
                     conts = out
-                    self.curr_copying_file = str(conts)
+                    self.curr_copying_file[6] = str(conts, 'utf-8')
                     self.curr_folder_size[6] += 1
                     self.folder_conts[6].append(conts)
                     if self.curr_folder_size[6] > 89:
                         break
-            print('len:', self.curr_folder_size[6], '\n')
+
+        elif kind == 'mysql':
+            while True:
+                no += 1
+                sleep(0.1)
+                if self.copy_mysqld_proc:
+                    out = self.copy_mysqld_proc.stdout.readline()
+                    conts = out
+                    self.curr_copying_file[5] = str(conts, 'utf-8')
+                    self.curr_folder_size[5] += 1
+                    self.folder_conts[5].append(conts)
+                    if self.curr_folder_size[5] > 367:
+                        break
+        elif kind == 'fini':
+            while True:
+                no += 1
+                sleep(0.1)
+                if self.init_mysql_proc:
+                    out = self.init_mysql_proc.stdout.readline()
+                    conts = out
+                    self.curr_copying_file[7] = str(conts, 'utf-8')
+                    self.curr_folder_size[7] += 1
+                    self.folder_conts[7].append(conts)
+                    if self.curr_folder_size[7] > 5:
+                        break
 
     def _create_sets_file(self):
  
@@ -181,9 +223,11 @@ class Install():
 
     def init_mysql(self):
 
+        self.watcher('fini')
+        
         os.makedirs(os.path.join(self.mysql_path, 'data'))
         
-        out1 = subprocess.Popen(
+        self.init_mysql_proc = subprocess.Popen(
                 [os.path.join(self.mysql_path, 'bin/mysqld'), 
                  "--console",
                  "--initialize-insecure",
@@ -191,7 +235,6 @@ class Install():
                  stdout=subprocess.PIPE,
                  stderr=subprocess.STDOUT,
                  shell=True)
-        print(str(out1.stdout.read(), 'utf-8'))
 
     def install_mysql_serv(self):
 
@@ -199,7 +242,6 @@ class Install():
         '\\\\mysql\\\\bin\\\\mysqld --install MySQL573 --defaults-file="'+ \
         self.destination + '\\\\mysql\\\\my.ini' + '"'
         out1 = subprocess.check_output(cmd, shell=True)
-        print(out1)
 
     def start_mysqld(self):
         mysqld_thread = threading.Thread(target=self._start_mysqld)
@@ -209,15 +251,11 @@ class Install():
         sleep(3)
 
     def _start_mysqld(self):
-        print('preparing mysql')
         self.mysqld_proc = subprocess.Popen(
                 [os.path.join(self.mysql_path, 'bin/mysqld')],
                 stdout=subprocess.PIPE,
                 stderr=subprocess.STDOUT,
                 shell=False)
-
-        print(self.mysqld_proc.stdout.read())
-        print('help')
 
     def set_pass(self):
 
@@ -242,10 +280,9 @@ class Install():
         self._stop_mysqld()
 
     def _stop_mysqld(self):
-        print('sleeping')
+
         #sleep(7)
         self.mysqld_proc.kill()
-        print(str(self.mysqld_proc.stdout.read(), 'utf-8'))
 
     def forward_slash(self, ln):
         if "\\\\" in ln:
@@ -254,4 +291,3 @@ class Install():
             fixed = ln.replace("\\", "/")
         return fixed
 
-# Install()

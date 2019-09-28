@@ -51,29 +51,16 @@ class Connector(QObject):
 
         percent = 100 / self.installer.folder_size[stage]
         no = 0
-        if stage != 6:
-            while True:
-                no += 1
-                sleep(1)
-                self.current_size = len(os.listdir(os.path.join(self.install_location,
-                                                         self.installer.path[stage])))
-                print(no, ':', self.current_size, '/', self.installer.folder_size[stage])
-                if self.current_size == self.installer.folder_size[stage]:
-                    self.doner(stage)
-                    break
-                else:
-                    self.updater(self.current_size * percent)
-        else:
-            while True:
-                no += 1
-                sleep(1)
-                self.current_size = self.installer.curr_folder_size[stage]
-                print(no, ':', self.current_size, '/', self.installer.folder_size[stage])
-                if self.current_size == self.installer.folder_size[stage]:
-                    self.doner(stage)
-                    break
-                else:
-                    self.updater(self.current_size * percent)
+        while True:
+            no += 1
+            sleep(0.2)
+            self.current_size = self.installer.curr_folder_size[stage]
+            if self.current_size == self.installer.folder_size[stage]:
+                self.doner(stage)
+                break
+            else:
+                self.logger(self.installer.curr_copying_file[stage])
+                self.updater(self.current_size * percent)
 
     def doner(self, stage):
         self.done.emit(stage)
@@ -146,10 +133,8 @@ class Connector(QObject):
 
     def _start_mysql_install(self):
         # stage 5
-        print('here 5')
-        self.doner(5)
-        #self.waiter(5)
-        #self.processes[5] = self.installer.copy_mysql_files()
+        self.waiter(5)
+        self.processes[5] = self.installer.copy_mysql_files()
 
     @pyqtSlot()
     def stop_mysql_install(self):
@@ -168,9 +153,7 @@ class Connector(QObject):
 
     def _start_php_install(self):
         # stage = 6
-        print('here 6')
         self.processes[6] = self.installer.copy_php_files()
-        # self.doner(6)
         self.waiter(6)
 
     @pyqtSlot()
@@ -182,6 +165,18 @@ class Connector(QObject):
     def _stop_php_install(self):
         self.processes[6].kill()
 
+    def _fini_watcher(self, stage):
+
+        percent = 100 / self.installer.folder_size[stage]
+        while True:
+                sleep(0.2)
+                self.current_size = self.installer.curr_folder_size[stage]
+                if self.current_size == self.installer.folder_size[stage]:
+                    break
+                else:
+                    real_size = self.current_size * percent * 0.9
+                    self.updater(real_size)
+
     @pyqtSlot()
     def start_finalising(self):
         start_finalising_thread = threading.Thread(target=self._start_finalising)
@@ -190,15 +185,19 @@ class Connector(QObject):
 
     def _start_finalising(self):
         # stage = 7
-        #self.installer.write_ports()
-        #self.installer.write_my_ini_file()
-        #self.installer.write_php_ini_file()
-        #self.processes[7] = self.installer._create_sets_file()
+        self.installer.write_ports()
+        self.installer.write_my_ini_file()
+        self.installer.write_php_ini_file()
+        self.updater(10)
+        self.processes[7] = self.installer._create_sets_file()
+        self.updater(20)
         
         # init mysql
-        #self.installer.init_mysql()
-        #self.installer.start_mysqld()
-        #self.installer.set_pass()
+        self.installer.init_mysql()
+        self._fini_watcher(7)
+        self.installer.start_mysqld()
+        self.installer.set_pass()
+        self.updater(100)
         self.doner(7)
         # self.waiter(7)
 
