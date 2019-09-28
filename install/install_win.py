@@ -21,7 +21,7 @@ class Install():
         self.server_path = os.path.join(self.destination, 'bin')
         self.php_path = os.path.join(self.server_path, 'php')
         self.mysql_path = os.path.join(self.server_path, 'mysql')
-        self.folder_size = [0, 0, 0, 55, 0, 368, 90, 6]
+        self.folder_size = [0, 0, 0, 94, 0, 368, 90, 6]
         self.curr_folder_size = [0, 0, 0, 0, 0, 0, 0, 0]
         self.curr_copying_file = ["", "", "", "", "", "", "", ""]
         self.folder_conts = [[], [], [], [], [], [], [], []]
@@ -34,11 +34,11 @@ class Install():
                           "settings_file": "3ddb429e2f446edae3406bb9d0799eed7bddda600d9a05fe01d3baaa.settings",
                           "passcode": ""},
                          [{"index": 0, "name": "Peter Web Server",
-                           "path": "PeterWebServer",
+                           "path": "bin/PeterWebServer",
                            "default_port": 80, "port": 7773,
                            "status": "Stopped"},
                        {"index": 1, "name": "MySQL Database",
-                        "path": "mysql\\bin\\",
+                        "path": "bin/mysql/bin/",
                         "status": "Stopped"}]]
         self.mysqld_proc = None
         self.copy_server_proc = None
@@ -142,7 +142,7 @@ class Install():
                     self.curr_copying_file[3] = str(conts, 'utf-8')
                     self.curr_folder_size[3] += 1
                     self.folder_conts[3].append(conts)
-                    if self.curr_folder_size[3] > 54:
+                    if self.curr_folder_size[3] > 93:
                         break
 
         elif kind == 'php':
@@ -188,7 +188,7 @@ class Install():
         self.settings[0]['parent_folder'] = self.destination
         self.settings[0]['passcode'] = self.passcode
 
-        file_path = os.path.join(self.destination,
+        file_path = os.path.join(self.server_path,
                                  self.settings[0]["settings_file"])
 
         with open(file_path, mode="wb") as sets_file:
