@@ -21,7 +21,7 @@ class Install():
         self.server_path = os.path.join(self.destination, 'bin')
         self.php_path = os.path.join(self.server_path, 'php')
         self.mysql_path = os.path.join(self.server_path, 'mysql')
-        self.folder_size = [0, 0, 0, 94, 0, 368, 90, 6]
+        self.folder_size = [0, 0, 0, 97, 0, 368, 90, 6]
         self.curr_folder_size = [0, 0, 0, 0, 0, 0, 0, 0]
         self.curr_copying_file = ["", "", "", "", "", "", "", ""]
         self.folder_conts = [[], [], [], [], [], [], [], []]
