@@ -13,7 +13,7 @@ from PyQt5.QtQml import QQmlApplicationEngine
 from connector import Connector
 
 QCoreApplication.setOrganizationName("Deuteronomy Works")
-QCoreApplication.setApplicationName("Peter")
+QCoreApplication.setApplicationName("Peter Installer")
 settings = QSettings()
 
 os.environ['QT_QUICK_CONTROLS_STYLE'] = 'Universal'
