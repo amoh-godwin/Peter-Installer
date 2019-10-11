@@ -1,0 +1,27 @@
+<RCC>
+    <qresource prefix="/">
+        <file>UI/images/img102.jpg</file>
+        <file>UI/qml/main.qml</file>
+        <file>UI/qml/main.qmlc</file>
+        <file>UI/qml/components/Appreciation.qml</file>
+        <file>UI/qml/components/Appreciation.qmlc</file>
+        <file>UI/qml/components/Authenticate.qml</file>
+        <file>UI/qml/components/Authenticate.qmlc</file>
+        <file>UI/qml/components/Finalising.qml</file>
+        <file>UI/qml/components/Finalising.qmlc</file>
+        <file>UI/qml/components/Location.qml</file>
+        <file>UI/qml/components/Location.qmlc</file>
+        <file>UI/qml/components/MySql.qml</file>
+        <file>UI/qml/components/MySql.qmlc</file>
+        <file>UI/qml/components/Php.qml</file>
+        <file>UI/qml/components/Php.qmlc</file>
+        <file>UI/qml/components/Server.qml</file>
+        <file>UI/qml/components/Server.qmlc</file>
+        <file>UI/qml/components/Start.qml</file>
+        <file>UI/qml/components/Start.qmlc</file>
+        <file>UI/qml/components/Welcome.qml</file>
+        <file>UI/qml/components/Welcome.qmlc</file>
+        <file>UI/qml/others/PassField.qml</file>
+        <file>UI/qml/others/PassField.qmlc</file>
+    </qresource>
+</RCC>

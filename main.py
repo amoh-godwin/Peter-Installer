@@ -13,18 +13,20 @@ from PyQt5.QtQml import QQmlApplicationEngine
 from connector import Connector
 
 QCoreApplication.setOrganizationName("Deuteronomy Works")
-QCoreApplication.setApplicationName("Peter Installer")
+QCoreApplication.setApplicationName("Peter Server | Installer")
 settings = QSettings()
+
+QResource.registerResource("installer.rcc")
 
 os.environ['QT_QUICK_CONTROLS_STYLE'] = 'Universal'
 app = QGuiApplication(sys.argv)
-# app.setWindowIcon(QIcon(""))
+app.setWindowIcon(QIcon("qrc:///UI/images/logo.png"))
 
 connect = Connector()
 
 engine = QQmlApplicationEngine()
 engine.rootContext().setContextProperty('Connector', connect)
-engine.load("UI/qml/main.qml")
+engine.load("qrc:///UI/qml/main.qml")
 engine.quit.connect(app.quit)
 
 sys.exit(app.exec_())

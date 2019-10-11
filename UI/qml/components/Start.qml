@@ -16,7 +16,7 @@ RowLayout {
 
             Image {
                 sourceSize: Qt.size(parent.width, parent.height)
-                source: "../../images/img102.jpg"
+                source: "qrc:///UI/images/img102.jpg"
                 fillMode: Image.PreserveAspectCrop
             }
 
