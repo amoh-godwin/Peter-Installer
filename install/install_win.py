@@ -27,7 +27,8 @@ class Install():
         self.folder_conts = [[], [], [], [], [], [], [], []]
         main_path = os.getcwd()
         self.passcode = ''
-        self.main = main_path.replace('\\install', '')
+        main_r = main_path.replace('\\install', '')
+        self.main = os.path.join(main_r, '..', 'FILES')
         self.server_port = 0
         self.mysql_port = 3336
         self.settings = [{'parent_folder': "",
@@ -62,7 +63,7 @@ class Install():
         # make folders
         os.makedirs(self.server_path)
 
-        cmd = 'xcopy ' + self.main + '\\base "' + self.forward_slash(self.server_path) + '" /E /Y'
+        cmd = 'xcopy ' + self.main + '\\server "' + self.forward_slash(self.server_path) + '" /E /Y'
 
         self.copy_server_proc = subprocess.Popen(cmd,
                         stdout=subprocess.PIPE,
