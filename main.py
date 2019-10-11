@@ -20,7 +20,7 @@ QResource.registerResource("installer.rcc")
 
 os.environ['QT_QUICK_CONTROLS_STYLE'] = 'Universal'
 app = QGuiApplication(sys.argv)
-app.setWindowIcon(QIcon("qrc:///UI/images/logo.png"))
+app.setWindowIcon(QIcon(":/UI/images/logo.png"))
 
 connect = Connector()
 

@@ -23,5 +23,6 @@
         <file>UI/qml/components/Welcome.qmlc</file>
         <file>UI/qml/others/PassField.qml</file>
         <file>UI/qml/others/PassField.qmlc</file>
+        <file>UI/images/logo.png</file>
     </qresource>
 </RCC>
