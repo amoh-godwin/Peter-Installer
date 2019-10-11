@@ -58,6 +58,9 @@ class Install():
 
         # call watcher
         self.watcher('server')
+    
+        # make folders
+        os.makedirs(self.server_path)
 
         cmd = 'xcopy ' + self.main + '\\base "' + self.forward_slash(self.server_path) + '" /E /Y'
 
@@ -142,7 +145,7 @@ class Install():
                     self.curr_copying_file[3] = str(conts, 'utf-8')
                     self.curr_folder_size[3] += 1
                     self.folder_conts[3].append(conts)
-                    if self.curr_folder_size[3] > 93:
+                    if self.curr_folder_size[3] > 96:
                         break
 
         elif kind == 'php':
