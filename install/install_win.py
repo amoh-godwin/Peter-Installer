@@ -175,6 +175,7 @@ class Install():
                     self.folder_conts[5].append(conts)
                     if self.curr_folder_size[5] > 367:
                         break
+
         elif kind == 'fini':
             while True:
                 no += 1
