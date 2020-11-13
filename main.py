@@ -20,13 +20,13 @@ QResource.registerResource("installer.rcc")
 
 os.environ['QT_QUICK_CONTROLS_STYLE'] = 'Universal'
 app = QGuiApplication(sys.argv)
-app.setWindowIcon(QIcon(":/UI/images/logo.png"))
+app.setWindowIcon(QIcon("UI/images/logo.png"))
 
 connect = Connector()
 
 engine = QQmlApplicationEngine()
-engine.rootContext().setContextProperty('Connector', connect)
-engine.load("qrc:///UI/qml/main.qml")
+engine.load("UI/qml/main.qml")
+engine.rootObjects()[0].setProperty('connector', connect)
 engine.quit.connect(app.quit)
 
 sys.exit(app.exec_())

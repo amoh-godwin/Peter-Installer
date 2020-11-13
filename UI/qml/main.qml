@@ -16,6 +16,8 @@ ApplicationWindow {
 
     Universal.theme: Universal.Dark
 
+    property QtObject connector
+
     property QtObject stack
     property string message: qsTr("Log Info")
     property string cont_func
@@ -260,25 +262,21 @@ ApplicationWindow {
     }
 
     Connections {
-        target: Connector
+        target: connector
 
-        onLog: {
-            var stat = logger
-            updateMessage(stat)
+        function onLog(message) {
+            updateMessage(message)
         }
 
-        onUpdate: {
-            var per = updater
-            updatePercent(per)
+        function onUpdate(percent) {
+            updatePercent(percent)
         }
 
-        onUpdateLocation: {
-            var loc = updateLoc
-            stack.currentItem.location.text = loc
+        function onUpdateLocation(location) {
+            stack.currentItem.location.text = location
         }
 
-        onDone: {
-            var level = doner
+        function onDone(level) {
             if(level === 3) {
                 proceedAfterServerInstallation()
             } else if(level === 5) {
