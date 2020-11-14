@@ -17,6 +17,7 @@ ApplicationWindow {
     Universal.theme: Universal.Dark
 
     property QtObject connector
+    property string license_text: ""
 
     property QtObject stack
     property string message: qsTr("Log Info")
