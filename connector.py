@@ -98,7 +98,10 @@ class Connector(QObject):
         slocation_thread.start()
 
     def _save_location(self, location):
+        self.installer.prepare_location(location)
         self.install_location = location
+        # save to db
+        self.setts.create_general_table(location)
 
     @pyqtSlot()
     def start_server_install(self):
