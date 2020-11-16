@@ -11,6 +11,8 @@ import platform
 
 from PyQt5.QtCore import QObject, pyqtSlot, pyqtSignal
 
+from settings import Setts
+
 if platform.system().lower() == 'windows':
     from install import install_win as install_mod
 
@@ -22,6 +24,9 @@ class Connector(QObject):
         # Call the Installer Class
         self.installer = install_mod.Install()
         self.home = self.installer.destination
+
+        # Settings class
+        self.setts = Setts()
 
         self.install_location = self.home
         self.current_size = 0
