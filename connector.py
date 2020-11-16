@@ -19,11 +19,12 @@ class Connector(QObject):
 
     def __init__(self):
         QObject.__init__(self)
-        self.home = 'C:/Deuteronomy Works/Peter/'
-        self.install_location = "C:/Deuteronomy Works/Peter"
+        # Call the Installer Class
+        self.installer = install_mod.Install()
+        self.home = self.installer.destination
+
+        self.install_location = self.home
         self.current_size = 0
-        # Send to the  Installer Class
-        self.installer = install_mod.Install(self.install_location)
         self.processes = [None, None, None, None, None, None, None, None]
         self.passcode = ''
 
