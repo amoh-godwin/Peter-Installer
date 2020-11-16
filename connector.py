@@ -11,7 +11,7 @@ import platform
 
 from PyQt5.QtCore import QObject, pyqtSlot, pyqtSignal
 
-if platform.system() == 'Windows':
+if platform.system().lower() == 'windows':
     from install import install_win as install_mod
 
 class Connector(QObject):
