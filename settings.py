@@ -50,6 +50,34 @@ class Setts():
         conn.commit()
         conn.close()
 
+    def create_database_table(self, passcode, upath, port):
+        username = 'root'
+        uip = "127.0.0.1"
+        uname = "MySQL"
+        default_port = 3306
+        status = 'Stopped'
+
+        conn = sqlite3.connect('settings.db')
+        cursor = conn.cursor()
+
+        try:
+            sql = """CREATE TABLE Databases (id real, \
+                username text, passcode text, uip text, \
+                uname text,  upath text,  default_port real, \
+                port real, status text)"""
+            cursor.execute(sql)
+
+        except:
+            pass
+
+        sql1 = f'''INSERT INTO Databases VALUES ({id}, "{username}", "{passcode}", "{uip}", \
+            "{uname}",  "{upath}",  {default_port}, \
+            {port}, "{status}")'''
+        cursor.execute(sql1)
+
+        conn.commit()
+        conn.close()
+
     def select_general_table(self):
         conn = sqlite3.connect('settings.db')
         cursor = conn.cursor()

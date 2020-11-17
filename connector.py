@@ -142,6 +142,20 @@ class Connector(QObject):
 
     def _start_mysql_install(self):
         # stage 5
+
+        # check which port to be used
+        s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        try:
+            # in use
+            s.connect(('127.0.0.1', 3306))
+            port = 3373
+        except:
+            port = 3306
+
+        upath = os.path.join(self.home, 'bin/mysql')
+
+        self.setts.create_database_table(self.passcode, upath, port)
+
         self.waiter(5)
         self.processes[5] = self.installer.copy_mysql_files()
 
