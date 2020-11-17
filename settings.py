@@ -29,7 +29,28 @@ class Setts():
         # Still check for errors before returning true
         return True
 
-    def select_general_table():
+    def create_server_table(self, id, uip, uname, upath, default_port, port, status):
+        conn = sqlite3.connect('settings.db')
+        cursor = conn.cursor()
+
+        try:
+            sql = """CREATE TABLE Servers (id real, uip text, \
+                uname text,  upath text,  default_port real, \
+                port real, status text)"""
+            cursor.execute(sql)
+
+        except:
+            pass
+
+        sql1 = f'''INSERT INTO Servers VALUES ({id}, "{uip}", \
+            "{uname}",  "{upath}",  {default_port}, \
+            {port}, "{status}")'''
+        cursor.execute(sql1)
+
+        conn.commit()
+        conn.close()
+
+    def select_general_table(self):
         conn = sqlite3.connect('settings.db')
         cursor = conn.cursor()
         sql = """SELECT * FROM general"""
@@ -38,5 +59,3 @@ class Setts():
         print(parent_folder)
         conn.close()
 
-
-select_general_table()
