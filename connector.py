@@ -116,6 +116,7 @@ class Connector(QObject):
 
         # check which port to be used
         port = self.setts.check_port(80)
+        self.installer.server_port = port
 
         upath = os.path.join(self.home, 'bin', 'Peterd')
         self.setts.create_server_table(0, '127.0.0.1',
@@ -160,6 +161,7 @@ class Connector(QObject):
 
         # check which port to be used
         port = self.setts.check_port(3306, 'mysql')
+        self.installer.mysql_port = port
 
         upath = os.path.join(self.home, 'bin/mysql')
 
