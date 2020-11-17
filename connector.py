@@ -227,11 +227,9 @@ class Connector(QObject):
         print('return')
         return
 
-        self.installer.write_ports()
         self.installer.write_my_ini_file()
         self.installer.write_php_ini_file()
         self.updater(10)
-        self.processes[7] = self.installer._create_sets_file()
         self.updater(20)
 
         # init mysql
