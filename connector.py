@@ -8,6 +8,7 @@ import os
 import threading
 from time import sleep
 import platform
+import socket
 
 from PyQt5.QtCore import QObject, pyqtSlot, pyqtSignal
 
@@ -15,6 +16,7 @@ from settings import Setts
 
 if platform.system().lower() == 'windows':
     from install import install_win as install_mod
+
 
 class Connector(QObject):
 
@@ -111,8 +113,26 @@ class Connector(QObject):
 
     def _start_server_install(self):
         # stage 3
-        self.processes[3] = self.installer.copy_server_files()
-        self.waiter(3)
+
+        # check which port to be used
+        s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        try:
+            # in use
+            s.connect(('127.0.0.1', 80))
+            port = 7773
+        except:
+            port = 80
+
+        upath = os.path.join(self.home, 'bin', 'Peterd')
+        self.setts.create_server_table(0, '127.0.0.1',
+         'localhost', upath, 80, port, 'Stopped')
+
+        # remove testing purposes only
+        self.doner(3)
+
+        # start copying
+        #self.processes[3] = self.installer.copy_server_files()
+        #self.waiter(3)
 
     # @pyqtSlot()
     def stop_server_install(self):
