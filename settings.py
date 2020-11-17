@@ -59,3 +59,11 @@ class Setts():
         print(parent_folder)
         conn.close()
 
+    def select_server_table(self):
+        conn = sqlite3.connect('settings.db')
+        cursor = conn.cursor()
+        sql = """SELECT * FROM Servers"""
+        cursor.execute(sql)
+        AL = cursor.fetchall()
+        conn.close()
+
