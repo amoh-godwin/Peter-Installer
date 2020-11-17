@@ -292,7 +292,9 @@ class Install():
         self.mysqld_proc.kill()
 
     def prepare_location(self, location):
-        # windows needs no preparation
+        # Prepare location
+        if not os.path.exists(location):
+            os.makedirs(location)
         return location
 
     def forward_slash(self, ln):
