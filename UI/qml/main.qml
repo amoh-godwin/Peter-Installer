@@ -101,19 +101,19 @@ ApplicationWindow {
     }
 
     onUseDefaultLocation: {
-        Connector.use_default_path()
+        connector.use_default_path()
     }
     onDeclineLocation: {
         // go back
         stack.pop()
     }
     onProceedAfterLocation: {
-        Connector.save_location(stack.currentItem.location.text)
+        connector.save_location(stack.currentItem.location.text)
         stack.push(serverComp);
     }
 
     onStartServerInstallation: {
-        Connector.start_server_install()
+        connector.start_server_install()
     }
     onStopServerInstallation: {
         showPrompt("rollback", "Are you sure you want to quit installation")
@@ -129,10 +129,10 @@ ApplicationWindow {
     onProceedAfterAuth: {
         // Authenticate
         // push next
-        if(stack.currentItem.field1.hiddenText === "") {
+        if(stack.currentItem.field1.text === "") {
             showPrompt('', 'Password Field cannot be empty')
-        } else if(stack.currentItem.field1.hiddenText === stack.currentItem.field2.hiddenText) {
-            Connector.save_auth(stack.currentItem.field1.hiddenText)
+        } else if(stack.currentItem.field1.text === stack.currentItem.field2.text) {
+            connector.save_auth(stack.currentItem.field1.text)
             stack.push(mysqlComp);
         } else {
             // report error
@@ -142,7 +142,7 @@ ApplicationWindow {
     }
 
     onStartMySqlInstallation: {
-        Connector.start_mysql_install()
+        connector.start_mysql_install()
     }
     onStopMySqlInstallation: {
         showPrompt("rollback", 'Are you sure you want to quit installation')
@@ -153,7 +153,7 @@ ApplicationWindow {
     }
 
     onStartPhpInstallation: {
-        Connector.start_php_install()
+        connector.start_php_install()
     }
     onStopPhpInstallation: {
         showPrompt("rollback", "Are you sure you want to quit")
@@ -164,7 +164,7 @@ ApplicationWindow {
     }
 
     onFinalise: {
-        Connector.start_finalising()
+        connector.start_finalising()
     }
     onRejectFinalising: {
         showPrompt("rollback", "Are you sure you want to quit")
@@ -178,7 +178,7 @@ ApplicationWindow {
         mainWindow.close()
     }
     onLaunchApplication: {
-        Connector.launch_application()
+        connector.launch_application()
     }
 
     Comp.Welcome {id: welcomeComp}
