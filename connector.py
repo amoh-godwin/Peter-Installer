@@ -122,12 +122,9 @@ class Connector(QObject):
         self.setts.create_server_table(0, '127.0.0.1',
          'localhost', upath, 80, port, 'Stopped')
 
-        # remove testing purposes only
-        self.doner(3)
-
         # start copying
-        #self.processes[3] = self.installer.copy_server_files()
-        #self.waiter(3)
+        self.processes[3] = self.installer.copy_server_files()
+        self.waiter(3)
 
     # @pyqtSlot()
     def stop_server_install(self):
@@ -167,11 +164,8 @@ class Connector(QObject):
 
         self.setts.create_database_table(self.passcode, upath, port)
 
-        # remove
-        self.doner(6)
-
-        #self.waiter(5)
-        #self.processes[5] = self.installer.copy_mysql_files()
+        self.waiter(5)
+        self.processes[5] = self.installer.copy_mysql_files()
 
     @pyqtSlot()
     def stop_mysql_install(self):
@@ -223,9 +217,6 @@ class Connector(QObject):
 
     def _start_finalising(self):
         # stage = 7
-
-        print('return')
-        return
 
         self.installer.write_my_ini_file()
         self.installer.write_php_ini_file()
