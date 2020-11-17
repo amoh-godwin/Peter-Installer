@@ -1,4 +1,5 @@
 import sqlite3
+import socket
 
 
 class Setts():
@@ -51,6 +52,7 @@ class Setts():
         conn.close()
 
     def create_database_table(self, passcode, upath, port):
+        id = 0
         username = 'root'
         uip = "127.0.0.1"
         uname = "MySQL"
@@ -102,3 +104,29 @@ class Setts():
         cursor.execute(sql)
         conn.commit()
         conn.close()
+
+    def check_port(self, port, kind=None):
+        s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+
+        if kind:
+            start_port = 3373
+        else:
+            start_port = 7773
+
+        try:
+            # in use
+            s.connect(('127.0.0.1', port))
+            
+            for x in range(start_port, 7800):
+                try:
+                    # in use
+                    s.connect(('127.0.0.1', x))
+                except:
+                    # whenever it connects
+                    new_port = x
+                    break
+
+        except:
+            new_port = port
+
+        return new_port

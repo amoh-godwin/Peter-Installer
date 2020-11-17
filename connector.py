@@ -115,13 +115,7 @@ class Connector(QObject):
         # stage 3
 
         # check which port to be used
-        s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-        try:
-            # in use
-            s.connect(('127.0.0.1', 80))
-            port = 7773
-        except:
-            port = 80
+        port = self.setts.check_port(80)
 
         upath = os.path.join(self.home, 'bin', 'Peterd')
         self.setts.create_server_table(0, '127.0.0.1',
@@ -165,20 +159,17 @@ class Connector(QObject):
         # stage 5
 
         # check which port to be used
-        s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-        try:
-            # in use
-            s.connect(('127.0.0.1', 3306))
-            port = 3373
-        except:
-            port = 3306
+        port = self.setts.check_port(3306, 'mysql')
 
         upath = os.path.join(self.home, 'bin/mysql')
 
         self.setts.create_database_table(self.passcode, upath, port)
 
-        self.waiter(5)
-        self.processes[5] = self.installer.copy_mysql_files()
+        # remove
+        self.doner(6)
+
+        #self.waiter(5)
+        #self.processes[5] = self.installer.copy_mysql_files()
 
     @pyqtSlot()
     def stop_mysql_install(self):
@@ -230,13 +221,17 @@ class Connector(QObject):
 
     def _start_finalising(self):
         # stage = 7
+
+        print('return')
+        return
+
         self.installer.write_ports()
         self.installer.write_my_ini_file()
         self.installer.write_php_ini_file()
         self.updater(10)
         self.processes[7] = self.installer._create_sets_file()
         self.updater(20)
-        
+
         # init mysql
         self.installer.init_mysql()
         self._fini_watcher(7)
