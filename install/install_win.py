@@ -293,8 +293,10 @@ class Install():
 
     def prepare_location(self, location):
         # Prepare location
-        if not os.path.exists(location):
-            os.makedirs(location)
+        # add the path to the bin
+        bin_path = os.path.join(location, 'bin')
+        if not os.path.exists(bin_path):
+            os.makedirs(bin_path)
         return location
 
     def forward_slash(self, ln):
