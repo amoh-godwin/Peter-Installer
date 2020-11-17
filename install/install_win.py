@@ -268,7 +268,8 @@ class Install():
         print('sleeping')
         print("yea")
 
-        cmd = 'ALTER USER "root"@"localhost" IDENTIFIED BY "'+self.passcode+'"'
+        cmd = f'ALTER USER "root"@"localhost" IDENTIFIED BY "{self.passcode}"'
+        print('here is cmd:', cmd)
         out = subprocess.Popen([os.path.join(self.mysql_path, 'bin\\mysql.exe'),
                                 '-u','root'],
                                stdin=subprocess.PIPE,
