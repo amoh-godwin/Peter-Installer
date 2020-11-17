@@ -1,15 +1,20 @@
 import sqlite3
 import socket
+import os
 
 
 class Setts():
 
 
     def __init__(self):
-        pass
+        self.db = 'settings.db'
 
     def create_general_table(self, folder):
-        conn = sqlite3.connect('settings.db')
+
+        self.db = os.path.join(folder, 'bin/settings.db')
+        print(self.db)
+
+        conn = sqlite3.connect(self.db)
         cursor = conn.cursor()
 
         sql = """CREATE TABLE general (parent_folder text)"""
@@ -31,7 +36,7 @@ class Setts():
         return True
 
     def create_server_table(self, id, uip, uname, upath, default_port, port, status):
-        conn = sqlite3.connect('settings.db')
+        conn = sqlite3.connect(self.db)
         cursor = conn.cursor()
 
         try:
@@ -59,7 +64,7 @@ class Setts():
         default_port = 3306
         status = 'Stopped'
 
-        conn = sqlite3.connect('settings.db')
+        conn = sqlite3.connect(self.db)
         cursor = conn.cursor()
 
         try:
@@ -81,7 +86,7 @@ class Setts():
         conn.close()
 
     def select_general_table(self):
-        conn = sqlite3.connect('settings.db')
+        conn = sqlite3.connect(self.db)
         cursor = conn.cursor()
         sql = """SELECT * FROM general"""
         cursor.execute(sql)
@@ -90,7 +95,7 @@ class Setts():
         conn.close()
 
     def select_server_table(self):
-        conn = sqlite3.connect('settings.db')
+        conn = sqlite3.connect(self.db)
         cursor = conn.cursor()
         sql = """SELECT * FROM Servers"""
         cursor.execute(sql)
@@ -98,7 +103,7 @@ class Setts():
         conn.close()
 
     def drop_table(self, table_name):
-        conn = sqlite3.connect('settings.db')
+        conn = sqlite3.connect(self.db)
         cursor = conn.cursor()
         sql = f"""DROP TABLE {table_name}"""
         cursor.execute(sql)
