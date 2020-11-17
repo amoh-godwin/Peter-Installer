@@ -142,6 +142,7 @@ class Connector(QObject):
 
     def _stop_server_install(self):
         self.processes[3].kill()
+        self.setts.drop_table('Servers')
 
     @pyqtSlot(str)
     def save_auth(self, passcode):
@@ -187,6 +188,7 @@ class Connector(QObject):
 
     def _stop_mysql(self):
         self.processes[5].kill()
+        self.setts.drop_table('Databases')
 
     @pyqtSlot()
     def start_php_install(self):

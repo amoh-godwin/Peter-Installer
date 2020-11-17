@@ -95,3 +95,10 @@ class Setts():
         AL = cursor.fetchall()
         conn.close()
 
+    def drop_table(self, table_name):
+        conn = sqlite3.connect('settings.db')
+        cursor = conn.cursor()
+        sql = f"""DROP TABLE {table_name}"""
+        cursor.execute(sql)
+        conn.commit()
+        conn.close()
