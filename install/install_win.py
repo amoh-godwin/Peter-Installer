@@ -155,7 +155,7 @@ class Install():
                     self.curr_copying_file[3] = str(conts, 'utf-8')
                     self.curr_folder_size[3] += 1
                     self.folder_conts[3].append(conts)
-                    if self.curr_folder_size[3] > 96:
+                    if get_size(self.server_path) == self.folder_size[3]:
                         break
 
         elif kind == 'php':
@@ -168,7 +168,7 @@ class Install():
                     self.curr_copying_file[6] = str(conts, 'utf-8')
                     self.curr_folder_size[6] += 1
                     self.folder_conts[6].append(conts)
-                    if self.curr_folder_size[6] > 89:
+                    if get_size(self.php_path) == self.folder_size[6]:
                         break
 
         elif kind == 'mysql':
@@ -181,7 +181,7 @@ class Install():
                     self.curr_copying_file[5] = str(conts, 'utf-8')
                     self.curr_folder_size[5] += 1
                     self.folder_conts[5].append(conts)
-                    if self.curr_folder_size[5] > 367:
+                    if get_size(self.mysql_path) == self.folder_size[5]:
                         break
 
         elif kind == 'fini':
