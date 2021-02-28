@@ -1,4 +1,4 @@
-# -*- mode: python -*-
+# -*- mode: python ; coding: utf-8 -*-
 
 block_cipher = None
 
@@ -19,19 +19,15 @@ pyz = PYZ(a.pure, a.zipped_data,
              cipher=block_cipher)
 exe = EXE(pyz,
           a.scripts,
-          [],
           a.binaries,
           a.zipfiles,
           a.datas,
-          exclude_binaries=True,
-          name='Setup',
+          [],
+          name='setup',
           debug=False,
           bootloader_ignore_signals=False,
           strip=False,
           upx=True,
-          icon="H:\\GitHub\\Peter-Installer\\UI\\images\\logo.ico",
-          console=False )
-
-coll = COLLECT(exe,
-               name='Setup')
-
+          upx_exclude=[],
+          runtime_tmpdir=None,
+          console=True )
