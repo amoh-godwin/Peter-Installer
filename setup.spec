@@ -20,6 +20,9 @@ pyz = PYZ(a.pure, a.zipped_data,
 exe = EXE(pyz,
           a.scripts,
           [],
+          a.binaries,
+          a.zipfiles,
+          a.datas,
           exclude_binaries=True,
           name='Setup',
           debug=False,
@@ -30,10 +33,5 @@ exe = EXE(pyz,
           console=False )
 
 coll = COLLECT(exe,
-               a.binaries,
-               a.zipfiles,
-               a.datas,
-               strip=False,
-               upx=True,
-               name='installer')
+               name='Setup')
 
