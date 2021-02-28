@@ -10,9 +10,7 @@ import base64
 from recursive_size import get_size
 
 
-SERVER_SIZE = 12950156
-PHP_SIZE = 66626868
-MYSQL_SIZE = 1705322622
+
 
 
 class Install():
@@ -29,13 +27,20 @@ class Install():
         self.server_path = os.path.join(self.destination, 'bin')
         self.php_path = os.path.join(self.server_path, 'php')
         self.mysql_path = os.path.join(self.server_path, 'mysql')
+        main_path = os.getcwd()
+        self.main = os.path.join(main_path, '..', 'Cargo')
+        SERVER_SIZE = get_size(
+                        os.path.join(self.main, 'server'))
+        PHP_SIZE = get_size(
+                        os.path.join(self.main, 'php'))
+        MYSQL_SIZE = get_size(
+                        os.path.join(self.main, 'mysql'))
         self.folder_size = [0, 0, 0, SERVER_SIZE, 0, MYSQL_SIZE, PHP_SIZE, 6]
         self.curr_folder_size = [0, 0, 0, 0, 0, 0, 0, 0]
         self.curr_copying_file = ["", "", "", "", "", "", "", ""]
         self.folder_conts = [[], [], [], [], [], [], [], []]
-        main_path = os.getcwd()
+        
         self.passcode = ''
-        self.main = os.path.join(main_path, '..', 'Cargo')
         self.server_port = 0
         self.mysql_port = 3336
         self.settings = [{'parent_folder': "",
@@ -155,8 +160,7 @@ class Install():
                     self.curr_copying_file[3] = str(conts, 'utf-8')
                     self.curr_folder_size[3] += 1
                     self.folder_conts[3].append(conts)
-                    if get_size(self.server_path) == get_size(
-                        os.path.join(self.main, 'server')):
+                    if self.curr_folder_size[3] == self.folder_size[3]:
                         break
 
         elif kind == 'php':
@@ -169,8 +173,7 @@ class Install():
                     self.curr_copying_file[6] = str(conts, 'utf-8')
                     self.curr_folder_size[6] += 1
                     self.folder_conts[6].append(conts)
-                    if get_size(self.php_path) == get_size(
-                        os.path.join(self.main, 'php')):
+                    if self.curr_folder_size[6] == self.folder_size[6]:
                         break
 
         elif kind == 'mysql':
@@ -183,8 +186,7 @@ class Install():
                     self.curr_copying_file[5] = str(conts, 'utf-8')
                     self.curr_folder_size[5] += 1
                     self.folder_conts[5].append(conts)
-                    if get_size(self.mysql_path) == get_size(
-                        os.path.join(self.main, 'mysql')):
+                    if self.curr_folder_size[5] == self.folder_size[5]:
                         break
 
         elif kind == 'fini':
