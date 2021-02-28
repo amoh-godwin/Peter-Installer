@@ -21,15 +21,15 @@ QResource.registerResource("installer.rcc")
 
 os.environ['QT_QUICK_CONTROLS_STYLE'] = 'Universal'
 app = QGuiApplication(sys.argv)
-app.setWindowIcon(QIcon("UI/images/logo.png"))
+app.setWindowIcon(QIcon("qrc:///UI/images/logo.png"))
 
 connect = Connector()
 
-with open('UI/license.txt', mode='r') as lic:
+with open('license.txt', mode='r') as lic:
     license_text = lic.read()
 
 engine = QQmlApplicationEngine()
-engine.load("UI/qml/main.qml")
+engine.load("qrc:///UI/qml/main.qml")
 engine.rootObjects()[0].setProperty('connector', connect)
 engine.rootObjects()[0].setProperty('license_text', license_text)
 engine.quit.connect(app.quit)
