@@ -118,13 +118,13 @@ class Connector(QObject):
         port = self.setts.check_port(80)
         self.installer.server_port = port
 
-        upath = os.path.join(self.home, 'bin', 'Peterd')
-        self.setts.create_server_table(0, '127.0.0.1',
-         'localhost', upath, 80, port, 'Stopped')
-
         # start copying
         self.processes[3] = self.installer.copy_server_files()
         self.waiter(3)
+
+        upath = os.path.join(self.home, 'bin', 'Peterd')
+        self.setts.create_server_table(0, '127.0.0.1',
+         'localhost', upath, 80, port, 'Stopped')
 
     # @pyqtSlot()
     def stop_server_install(self):
@@ -160,12 +160,11 @@ class Connector(QObject):
         port = self.setts.check_port(3306, 'mysql')
         self.installer.mysql_port = port
 
-        upath = os.path.join(self.home, 'bin/mysql')
-
-        self.setts.create_database_table(self.passcode, upath, port)
-
         self.waiter(5)
         self.processes[5] = self.installer.copy_mysql_files()
+
+        upath = os.path.join(self.home, 'bin/mysql')
+        self.setts.create_database_table(self.passcode, upath, port)
 
     @pyqtSlot()
     def stop_mysql_install(self):
@@ -225,9 +224,11 @@ class Connector(QObject):
 
         # init mysql
         self.installer.init_mysql()
-        self._fini_watcher(7)
+        self._fini_watcher(45)
         self.installer.start_mysqld()
+        self.updater(85)
         self.installer.set_pass()
+        self.updater(90)
         self.updater(100)
         self.doner(7)
         # self.waiter(7)
