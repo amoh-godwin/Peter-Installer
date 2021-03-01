@@ -121,13 +121,13 @@ class Setts():
         try:
             # in use
             s.connect(('127.0.0.1', port))
-            
+
             for x in range(start_port, 7800):
                 try:
                     # in use
                     s.connect(('127.0.0.1', x))
                 except:
-                    # whenever it connects
+                    # not in use
                     new_port = x
                     break
 
