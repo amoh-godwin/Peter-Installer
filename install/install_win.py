@@ -155,11 +155,11 @@ class Install():
                 no += 1
                 sleep(0.1)
                 if self.copy_server_proc:
-                    out = self.copy_server_proc.stdout.readline()
-                    conts = out
-                    self.curr_copying_file[3] = str(conts, 'utf-8')
-                    self.curr_folder_size[3] += 1
-                    self.folder_conts[3].append(conts)
+                    for cont in self.copy_server_proc.stdout:
+                        fn = str(cont, 'utf-8').strip()
+                        self.curr_copying_file[3] = fn
+                        self.curr_folder_size[3] += get_size(fn)
+                        self.folder_conts[3].append(fn)
                     if self.curr_folder_size[3] == self.folder_size[3]:
                         break
 
@@ -168,11 +168,11 @@ class Install():
                 no += 1
                 sleep(0.1)
                 if self.copy_php_proc:
-                    out = self.copy_php_proc.stdout.readline()
-                    conts = out
-                    self.curr_copying_file[6] = str(conts, 'utf-8')
-                    self.curr_folder_size[6] += 1
-                    self.folder_conts[6].append(conts)
+                    for cont in self.copy_php_proc.stdout:
+                        fn = str(cont, 'utf-8').strip()
+                        self.curr_copying_file[6] = fn
+                        self.curr_folder_size[6] += get_size(fn)
+                        self.folder_conts[6].append(fn)
                     if self.curr_folder_size[6] == self.folder_size[6]:
                         break
 
@@ -181,11 +181,11 @@ class Install():
                 no += 1
                 sleep(0.1)
                 if self.copy_mysqld_proc:
-                    out = self.copy_mysqld_proc.stdout.readline()
-                    conts = out
-                    self.curr_copying_file[5] = str(conts, 'utf-8')
-                    self.curr_folder_size[5] += 1
-                    self.folder_conts[5].append(conts)
+                    for cont in self.copy_mysqld_proc.stdout:
+                        fn = str(cont, 'utf-8').strip()
+                        self.curr_copying_file[5] = fn
+                        self.curr_folder_size[5] += get_size(fn)
+                        self.folder_conts[5].append(fn)
                     if self.curr_folder_size[5] == self.folder_size[5]:
                         break
 
