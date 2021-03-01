@@ -278,25 +278,18 @@ class Install():
 
     def set_pass(self):
 
-        print('sleeping')
-        print("yea")
-
         cmd = f'ALTER USER "root"@"localhost" IDENTIFIED BY "{self.passcode}"'
-        print('here is cmd:', cmd)
+
         out = subprocess.Popen([os.path.join(self.mysql_path, 'bin\\mysql.exe'),
                                 '-u','root'],
                                stdin=subprocess.PIPE,
                                stdout=subprocess.PIPE,
                                stderr=subprocess.STDOUT,
                                shell=False)
-        # print(str(out.stdout.read(), 'utf-8'))
-        print('sick')
+
         # out.wait()
         out1 = out.communicate(input=bytes(cmd, 'utf-8'))
-        print('very sick')
-        print(out1[0])
         out.kill()
-        print('terminate')
         self._stop_mysqld()
 
     def _stop_mysqld(self):
