@@ -56,6 +56,26 @@ class Setts():
         conn.commit()
         conn.close()
 
+    def create_server_processes_table(self):
+        conn = sqlite3.connect(self.db)
+        cursor = conn.cursor()
+        sql = """CREATE TABLE server_processes (server_id real, pid real) """
+        try:
+            cursor.execute(sql)
+        except:
+            # drop table
+            sql1 = f"""DROP TABLE server_processes"""
+            cursor.execute(sql1)
+
+            sql2 = """CREATE TABLE server_processes (server_id real, pid real) """
+            try:
+                cursor.execute(sql2)
+            except:
+                pass
+
+        conn.commit()
+        conn.close()
+
     def create_database_table(self, passcode, upath, port):
         id = 0
         username = 'root'
@@ -81,6 +101,26 @@ class Setts():
             "{uname}",  "{upath}",  {default_port}, \
             {port}, "{status}")'''
         cursor.execute(sql1)
+
+        conn.commit()
+        conn.close()
+
+    def create_database_processes(self):
+        conn = sqlite3.connect(self.db)
+        cursor = conn.cursor()
+        sql = """CREATE TABLE database_processes (server_id real, pid real) """
+        try:
+            cursor.execute(sql)
+        except:
+            # drop table
+            sql1 = f"""DROP TABLE database_processes"""
+            cursor.execute(sql1)
+
+            sql2 = """CREATE TABLE database_processes (server_id real, pid real) """
+            try:
+                cursor.execute(sql2)
+            except:
+                pass
 
         conn.commit()
         conn.close()
