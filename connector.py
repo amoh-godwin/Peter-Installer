@@ -125,6 +125,7 @@ class Connector(QObject):
         upath = os.path.join(self.home, 'bin', 'Peterd')
         self.setts.create_server_table(0, '127.0.0.1',
          'localhost', upath, 80, port, 'Stopped')
+        self.setts.create_server_processes_table()
 
     # @pyqtSlot()
     def stop_server_install(self):
@@ -162,6 +163,7 @@ class Connector(QObject):
 
         upath = os.path.join(self.home, 'bin/mysql')
         self.setts.create_database_table(self.passcode, upath, port)
+        self.setts.create_database_processes_table()
 
         self.waiter(5)
         self.processes[5] = self.installer.copy_mysql_files()

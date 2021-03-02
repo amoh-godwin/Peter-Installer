@@ -105,7 +105,7 @@ class Setts():
         conn.commit()
         conn.close()
 
-    def create_database_processes(self):
+    def create_database_processes_table(self):
         conn = sqlite3.connect(self.db)
         cursor = conn.cursor()
         sql = """CREATE TABLE database_processes (server_id real, pid real) """
