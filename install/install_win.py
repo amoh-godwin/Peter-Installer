@@ -39,7 +39,7 @@ class Install():
         self.curr_folder_size = [0, 0, 0, 0, 0, 0, 0, 0]
         self.curr_copying_file = ["", "", "", "", "", "", "", ""]
         self.folder_conts = [[], [], [], [], [], [], [], []]
-        
+
         self.passcode = ''
         self.server_port = 0
         self.mysql_port = 3336
@@ -243,7 +243,7 @@ class Install():
     def init_mysql(self):
 
         self.watcher('fini')
-        
+
         os.makedirs(os.path.join(self.mysql_path, 'data'))
         
         self.init_mysql_proc = subprocess.Popen(
