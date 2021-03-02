@@ -60,8 +60,10 @@ class Setts():
         conn = sqlite3.connect(self.db)
         cursor = conn.cursor()
         sql = """CREATE TABLE server_processes (server_id real, pid real) """
+        sql3 = """INSERT INTO TABLE server_processes VALUES (?, ?) """
         try:
             cursor.execute(sql)
+            cursor.execute(sql3, (0,0,))
         except:
             # drop table
             sql1 = f"""DROP TABLE server_processes"""
@@ -70,6 +72,7 @@ class Setts():
             sql2 = """CREATE TABLE server_processes (server_id real, pid real) """
             try:
                 cursor.execute(sql2)
+                cursor.execute(sql3, (0,0,))
             except:
                 pass
 
@@ -109,8 +112,10 @@ class Setts():
         conn = sqlite3.connect(self.db)
         cursor = conn.cursor()
         sql = """CREATE TABLE database_processes (server_id real, pid real) """
+        sql3 = """INSERT INTO TABLE server_processes VALUES (?, ?) """
         try:
             cursor.execute(sql)
+            cursor.execute(sql3, (0,0,))
         except:
             # drop table
             sql1 = f"""DROP TABLE database_processes"""
@@ -119,9 +124,44 @@ class Setts():
             sql2 = """CREATE TABLE database_processes (server_id real, pid real) """
             try:
                 cursor.execute(sql2)
+                cursor.execute(sql3, (0,0,))
             except:
                 pass
 
+        conn.commit()
+        conn.close()
+
+    def save_server_pid(self, id, pid):
+        conn = sqlite3.connect(self.db)
+        cursor = conn.cursor()
+        sql = f"""UPDATE server_processes SET pid={pid} WHERE server_id={id}"""
+        cursor.execute(sql)
+        conn.commit()
+        conn.close()
+
+    def save_database_pid(self, id, pid):
+        conn = sqlite3.connect(self.db)
+        cursor = conn.cursor()
+        sql = f"""UPDATE database_processes SET pid={pid} WHERE server_id={id}"""
+        cursor.execute(sql)
+        conn.commit()
+        conn.close()
+
+    def remove_server_pid(self, id):
+        conn = sqlite3.connect(self.db)
+        cursor = conn.cursor()
+        pid = 0
+        sql = f"""UPDATE server_processes SET pid={pid} WHERE server_id={id}"""
+        cursor.execute(sql)
+        conn.commit()
+        conn.close()
+
+    def remove_database_pid(self, id):
+        conn = sqlite3.connect(self.db)
+        cursor = conn.cursor()
+        pid = 0
+        sql = f"""UPDATE database_processes SET pid={pid} WHERE server_id={id}"""
+        cursor.execute(sql)
         conn.commit()
         conn.close()
 
