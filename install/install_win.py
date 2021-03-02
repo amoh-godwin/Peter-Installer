@@ -139,7 +139,7 @@ class Install():
         self.copy_mysqld_proc = subprocess.Popen(cmd,
                         stdout=subprocess.PIPE,
                         stderr=subprocess.STDOUT,
-                        shell=False)
+                        shell=True)
 
         return self.copy_mysqld_proc
 
