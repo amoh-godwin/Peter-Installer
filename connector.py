@@ -224,7 +224,8 @@ class Connector(QObject):
 
         # init mysql
         self.installer.init_mysql()
-        self._fini_watcher(45)
+        self._fini_watcher(7)
+        self.updater(45)
         self.installer.start_mysqld()
         self.updater(85)
         self.installer.set_pass()
