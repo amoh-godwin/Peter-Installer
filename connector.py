@@ -160,11 +160,11 @@ class Connector(QObject):
         port = self.setts.check_port(3306, 'mysql')
         self.installer.mysql_port = port
 
-        self.waiter(5)
-        self.processes[5] = self.installer.copy_mysql_files()
-
         upath = os.path.join(self.home, 'bin/mysql')
         self.setts.create_database_table(self.passcode, upath, port)
+
+        self.waiter(5)
+        self.processes[5] = self.installer.copy_mysql_files()
 
     @pyqtSlot()
     def stop_mysql_install(self):
