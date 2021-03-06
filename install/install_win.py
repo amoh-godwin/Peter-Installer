@@ -18,7 +18,6 @@ class Install():
 
 
     def __init__(self):
-        super.__init__
         self.destination = 'C:/Deuteronomy Works/Peter/'
         self.path = ['', '', '', 'bin', '', 'bin/mysql', 'bin/php']
         self.server_path = os.path.join(self.destination, 'bin')
