@@ -60,7 +60,7 @@ class Setts():
         conn = sqlite3.connect(self.db)
         cursor = conn.cursor()
         sql = """CREATE TABLE server_processes (server_id real, pid real) """
-        sql3 = """INSERT INTO TABLE server_processes VALUES (?, ?) """
+        sql3 = """INSERT INTO server_processes VALUES (?, ?) """
         try:
             cursor.execute(sql)
             cursor.execute(sql3, (0,0,))
@@ -112,7 +112,7 @@ class Setts():
         conn = sqlite3.connect(self.db)
         cursor = conn.cursor()
         sql = """CREATE TABLE database_processes (server_id real, pid real) """
-        sql3 = """INSERT INTO TABLE server_processes VALUES (?, ?) """
+        sql3 = """INSERT INTO database_processes VALUES (?, ?) """
         try:
             cursor.execute(sql)
             cursor.execute(sql3, (0,0,))
