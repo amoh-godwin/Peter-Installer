@@ -8,22 +8,30 @@ import os
 import threading
 from time import sleep
 import platform
+import socket
 
 from PyQt5.QtCore import QObject, pyqtSlot, pyqtSignal
 
-if platform.system() == 'Windows':
+from settings import Setts
+
+if platform.system().lower() == 'windows':
     from install import install_win as install_mod
+
 
 class Connector(QObject):
 
 
     def __init__(self):
         QObject.__init__(self)
-        self.home = 'C:/Deuteronomy Works/Peter/'
-        self.install_location = "C:/Deuteronomy Works/Peter"
+        # Call the Installer Class
+        self.installer = install_mod.Install()
+        self.home = self.installer.destination
+
+        # Settings class
+        self.setts = Setts()
+
+        self.install_location = self.home
         self.current_size = 0
-        # Send to the  Installer Class
-        self.installer = install_mod.Install(self.install_location)
         self.processes = [None, None, None, None, None, None, None, None]
         self.passcode = ''
 
@@ -92,7 +100,10 @@ class Connector(QObject):
         slocation_thread.start()
 
     def _save_location(self, location):
+        self.installer.prepare_location(location)
         self.install_location = location
+        # save to db
+        self.setts.create_general_table(location)
 
     @pyqtSlot()
     def start_server_install(self):
@@ -102,8 +113,19 @@ class Connector(QObject):
 
     def _start_server_install(self):
         # stage 3
+
+        # check which port to be used
+        port = self.setts.check_port(80)
+        self.installer.server_port = port
+
+        # start copying
         self.processes[3] = self.installer.copy_server_files()
         self.waiter(3)
+
+        upath = os.path.join(self.home, 'bin', 'Peterd')
+        self.setts.create_server_table(0, '127.0.0.1',
+         'localhost', upath, 80, port, 'Stopped')
+        self.setts.create_server_processes_table()
 
     # @pyqtSlot()
     def stop_server_install(self):
@@ -113,6 +135,7 @@ class Connector(QObject):
 
     def _stop_server_install(self):
         self.processes[3].kill()
+        self.setts.drop_table('Servers')
 
     @pyqtSlot(str)
     def save_auth(self, passcode):
@@ -133,6 +156,15 @@ class Connector(QObject):
 
     def _start_mysql_install(self):
         # stage 5
+
+        # check which port to be used
+        port = self.setts.check_port(3306, 'mysql')
+        self.installer.mysql_port = port
+
+        upath = os.path.join(self.home, 'bin/mysql')
+        self.setts.create_database_table(self.passcode, upath, port)
+        self.setts.create_database_processes_table()
+
         self.waiter(5)
         self.processes[5] = self.installer.copy_mysql_files()
 
@@ -144,6 +176,7 @@ class Connector(QObject):
 
     def _stop_mysql(self):
         self.processes[5].kill()
+        self.setts.drop_table('Databases')
 
     @pyqtSlot()
     def start_php_install(self):
@@ -185,18 +218,20 @@ class Connector(QObject):
 
     def _start_finalising(self):
         # stage = 7
-        self.installer.write_ports()
+
         self.installer.write_my_ini_file()
         self.installer.write_php_ini_file()
         self.updater(10)
-        self.processes[7] = self.installer._create_sets_file()
         self.updater(20)
-        
+
         # init mysql
         self.installer.init_mysql()
         self._fini_watcher(7)
+        self.updater(45)
         self.installer.start_mysqld()
+        self.updater(85)
         self.installer.set_pass()
+        self.updater(90)
         self.updater(100)
         self.doner(7)
         # self.waiter(7)

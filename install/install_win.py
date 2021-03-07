@@ -7,6 +7,9 @@ from time import sleep
 import os
 import base64
 
+from recursive_size import get_size
+
+
 class Install():
 
 
@@ -14,20 +17,26 @@ class Install():
     """
 
 
-    def __init__(self, destination):
-        super.__init__
-        self.destination = destination
+    def __init__(self):
+        self.destination = 'C:/Deuteronomy Works/Peter/'
         self.path = ['', '', '', 'bin', '', 'bin/mysql', 'bin/php']
         self.server_path = os.path.join(self.destination, 'bin')
         self.php_path = os.path.join(self.server_path, 'php')
         self.mysql_path = os.path.join(self.server_path, 'mysql')
-        self.folder_size = [0, 0, 0, 97, 0, 368, 90, 6]
+        main_path = os.getcwd()
+        self.main = os.path.join(main_path, '..', 'Cargo')
+        SERVER_SIZE = get_size(
+                        os.path.join(self.main, 'server'))
+        PHP_SIZE = get_size(
+                        os.path.join(self.main, 'php'))
+        MYSQL_SIZE = get_size(
+                        os.path.join(self.main, 'mysql'))
+        self.folder_size = [0, 0, 0, SERVER_SIZE, 0, MYSQL_SIZE, PHP_SIZE, 6]
         self.curr_folder_size = [0, 0, 0, 0, 0, 0, 0, 0]
         self.curr_copying_file = ["", "", "", "", "", "", "", ""]
         self.folder_conts = [[], [], [], [], [], [], [], []]
-        main_path = os.getcwd()
+
         self.passcode = ''
-        self.main = main_path.replace('\\install', '')
         self.server_port = 0
         self.mysql_port = 3336
         self.settings = [{'parent_folder': "",
@@ -60,9 +69,11 @@ class Install():
         self.watcher('server')
     
         # make folders
-        os.makedirs(self.server_path)
+        if not os.path.exists(self.server_path):
+            os.makedirs(self.server_path)
 
-        cmd = 'xcopy ' + self.main + '\\base "' + self.forward_slash(self.server_path) + '" /E /Y'
+        cmd = 'xcopy ' + self.main + '\\server "' + self.forward_slash(self.server_path) + '" /E /Y'
+        print(cmd)
 
         self.copy_server_proc = subprocess.Popen(cmd,
                         stdout=subprocess.PIPE,
@@ -124,7 +135,7 @@ class Install():
         self.copy_mysqld_proc = subprocess.Popen(cmd,
                         stdout=subprocess.PIPE,
                         stderr=subprocess.STDOUT,
-                        shell=False)
+                        shell=True)
 
         return self.copy_mysqld_proc
 
@@ -140,12 +151,14 @@ class Install():
                 no += 1
                 sleep(0.1)
                 if self.copy_server_proc:
-                    out = self.copy_server_proc.stdout.readline()
-                    conts = out
-                    self.curr_copying_file[3] = str(conts, 'utf-8')
-                    self.curr_folder_size[3] += 1
-                    self.folder_conts[3].append(conts)
-                    if self.curr_folder_size[3] > 96:
+                    for cont in self.copy_server_proc.stdout:
+                        fn = str(cont, 'utf-8').strip()
+                        self.curr_copying_file[3] = fn
+                        self.curr_folder_size[3] += get_size(fn)
+                        self.folder_conts[3].append(fn)
+                        if ' copied' in fn:
+                            break
+                    if self.curr_folder_size[3] == self.folder_size[3]:
                         break
 
         elif kind == 'php':
@@ -153,12 +166,14 @@ class Install():
                 no += 1
                 sleep(0.1)
                 if self.copy_php_proc:
-                    out = self.copy_php_proc.stdout.readline()
-                    conts = out
-                    self.curr_copying_file[6] = str(conts, 'utf-8')
-                    self.curr_folder_size[6] += 1
-                    self.folder_conts[6].append(conts)
-                    if self.curr_folder_size[6] > 89:
+                    for cont in self.copy_php_proc.stdout:
+                        fn = str(cont, 'utf-8').strip()
+                        self.curr_copying_file[6] = fn
+                        self.curr_folder_size[6] += get_size(fn)
+                        self.folder_conts[6].append(fn)
+                        if ' copied' in fn:
+                            break
+                    if self.curr_folder_size[6] == self.folder_size[6]:
                         break
 
         elif kind == 'mysql':
@@ -166,13 +181,16 @@ class Install():
                 no += 1
                 sleep(0.1)
                 if self.copy_mysqld_proc:
-                    out = self.copy_mysqld_proc.stdout.readline()
-                    conts = out
-                    self.curr_copying_file[5] = str(conts, 'utf-8')
-                    self.curr_folder_size[5] += 1
-                    self.folder_conts[5].append(conts)
-                    if self.curr_folder_size[5] > 367:
+                    for cont in self.copy_mysqld_proc.stdout:
+                        fn = str(cont, 'utf-8').strip()
+                        self.curr_copying_file[5] = fn
+                        self.curr_folder_size[5] += get_size(fn)
+                        self.folder_conts[5].append(fn)
+                        if ' copied' in fn:
+                            break
+                    if self.curr_folder_size[5] == self.folder_size[5]:
                         break
+
         elif kind == 'fini':
             while True:
                 no += 1
@@ -227,7 +245,7 @@ class Install():
     def init_mysql(self):
 
         self.watcher('fini')
-        
+
         os.makedirs(os.path.join(self.mysql_path, 'data'))
         
         self.init_mysql_proc = subprocess.Popen(
@@ -262,30 +280,36 @@ class Install():
 
     def set_pass(self):
 
-        print('sleeping')
-        print("yea")
+        cmd = f'ALTER USER "root"@"localhost" IDENTIFIED BY "{self.passcode}"'
 
-        cmd = 'ALTER USER "root"@"localhost" IDENTIFIED BY "'+self.passcode+'"'
         out = subprocess.Popen([os.path.join(self.mysql_path, 'bin\\mysql.exe'),
                                 '-u','root'],
                                stdin=subprocess.PIPE,
                                stdout=subprocess.PIPE,
                                stderr=subprocess.STDOUT,
                                shell=False)
-        # print(str(out.stdout.read(), 'utf-8'))
-        print('sick')
+
         # out.wait()
         out1 = out.communicate(input=bytes(cmd, 'utf-8'))
-        print('very sick')
-        print(out1[0])
         out.kill()
-        print('terminate')
         self._stop_mysqld()
 
     def _stop_mysqld(self):
 
         #sleep(7)
         self.mysqld_proc.kill()
+
+    def prepare_location(self, location):
+        # Prepare location
+        # add the bin and server
+        bin_path = os.path.join(location, 'bin')
+        server_path = os.path.join(location, 'Server')
+        if not os.path.exists(bin_path):
+            os.makedirs(bin_path)
+        if not os.path.exists(server_path):
+            os.makedirs(server_path)
+
+        return location
 
     def forward_slash(self, ln):
         if "\\\\" in ln:

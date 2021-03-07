@@ -15,7 +15,9 @@ TextField {
         radius: 3
     }
 
-    Keys.onPressed: {
+    echoMode: TextInput.Password
+
+    /*Keys.onPressed: {
         if(event.key === Qt.Key_Backspace) {
             if(text.length === 1) {
                 text = ''
@@ -36,5 +38,5 @@ TextField {
             event.accepted = true
         }
 
-    }
+    }*/
 }
