@@ -1,13 +1,17 @@
 # -*- mode: python -*-
+import os
 
 block_cipher = None
 
 
-a = Analysis(['H:\\GitHub\\Peter-Installer\\main.py'],
-             pathex=['H:\\GitHub\\Peter-Installer'],
+wd = os.path.realpath('.')
+icon_path = os.path.join(wd, "UI", "images", "logo.ico")
+
+a = Analysis(['main.py'],
+             pathex=[wd],
              binaries=[],
-             datas=[("H:\\GitHub\\Peter-Installer\\installer.rcc", "."),
-             ('H:\\GitHub\\Peter-Installer\\license.txt', '.')],
+             datas=[(os.path.join(wd, "installer.rcc"), "."),
+             (os.path.join(wd, 'license.txt'), '.')],
              hiddenimports=[],
              hookspath=[],
              runtime_hooks=[],
@@ -27,7 +31,7 @@ exe = EXE(pyz,
           bootloader_ignore_signals=False,
           strip=False,
           upx=True,
-          icon="H:\\GitHub\\Peter-Installer\\UI\\images\\logo.ico",
+          icon=icon_path,
           console=False )
 coll = COLLECT(exe,
                a.binaries,
